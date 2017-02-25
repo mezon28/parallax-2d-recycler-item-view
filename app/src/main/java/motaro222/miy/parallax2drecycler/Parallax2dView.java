@@ -1,5 +1,6 @@
 package motaro222.miy.parallax2drecycler;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
@@ -40,9 +41,11 @@ public class Parallax2dView extends ViewGroup {
     }
 
     public Parallax2dView(Context context, AttributeSet attrs, int defStyleAttr) {
-        this(context, attrs, defStyleAttr, 0);
+        super(context, attrs, defStyleAttr);
+        init(context, attrs);
     }
 
+    @TargetApi(21)
     public Parallax2dView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init(context, attrs);
@@ -124,6 +127,9 @@ public class Parallax2dView extends ViewGroup {
         setMeasuredDimension(widthMeasureSpec, heightMeasureSpec);
     }
 
+    // Temporary hold location of this view
+    private int[] location = new int[2];
+
     /**
      * Re-layout all children on each scroll
      */
@@ -136,7 +142,9 @@ public class Parallax2dView extends ViewGroup {
         int paddingRight = getPaddingRight();
         int paddingBottom = getPaddingBottom();
 
-        int topPosition = getTop();
+        getLocationOnScreen(location);
+
+        int topPosition = location[1];
 
         int maxTransitionY = (int) (((SCREEN_HEIGHT - h) / 2f - topPosition) / SCREEN_HEIGHT * mMaxTransitionSpace * mTransitionIntensity);
 
